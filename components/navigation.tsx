@@ -88,48 +88,59 @@ export default function Navigation() {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden pb-4 border-t border-border">
-            {navItems.map((item) => (
-              <div key={item.href}>
-                <button
-                  onClick={() => setOpenDropdown(openDropdown === item.href ? null : item.href)}
-                  className="w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary/50 rounded-md flex items-center justify-between"
-                >
-                  <Link href={item.href} className="flex-1">
-                    {item.label}
-                  </Link>
-                  {item.submenu && (
-                    <ChevronDown
-                      size={16}
-                      className={`transform transition-transform ${openDropdown === item.href ? "rotate-180" : ""}`}
-                    />
-                  )}
-                </button>
+        {/* Mobile Navigation */}
+{isOpen && (
+  <div className="md:hidden pb-4 border-t border-border">
+    {navItems.map((item) => (
+      <div key={item.href}>
+        <button
+          onClick={() => setOpenDropdown(openDropdown === item.href ? null : item.href)}
+          className="w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary/50 rounded-md flex items-center justify-between"
+        >
+          {/* Close menu when navigating */}
+          <Link
+            href={item.href}
+            onClick={() => setIsOpen(false)}
+            className="flex-1"
+          >
+            {item.label}
+          </Link>
 
-                {item.submenu && openDropdown === item.href && (
-                  <div className="bg-secondary/30 border-l-2 border-primary">
-                    {item.submenu.map((subitem) => (
-                      <Link
-                        key={subitem.href}
-                        href={subitem.href}
-                        className="block px-8 py-2 text-sm text-foreground hover:text-primary"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {subitem.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+          {item.submenu && (
+            <ChevronDown
+              size={16}
+              className={`transform transition-transform ${openDropdown === item.href ? "rotate-180" : ""}`}
+            />
+          )}
+        </button>
+
+        {item.submenu && openDropdown === item.href && (
+          <div className="bg-secondary/30 border-l-2 border-primary">
+            {item.submenu.map((subitem) => (
+              <Link
+                key={subitem.href}
+                href={subitem.href}
+                className="block px-8 py-2 text-sm text-foreground hover:text-primary"
+                onClick={() => setIsOpen(false)} // ✅ close menu when submenu clicked
+              >
+                {subitem.label}
+              </Link>
             ))}
-            <div className="px-4 pt-2">
-              <Button asChild className="w-full" size="sm">
-                <Link href="/contact">Book Consultation</Link>
-              </Button>
-            </div>
           </div>
         )}
+      </div>
+    ))}
+
+    <div className="px-4 pt-2">
+      <Button asChild className="w-full" size="sm">
+        <Link href="/contact" onClick={() => setIsOpen(false)}>
+          Book Consultation
+        </Link>
+      </Button>
+    </div>
+  </div>
+)}
+       
       </div>
     </nav>
   )
