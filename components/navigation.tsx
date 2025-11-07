@@ -93,26 +93,39 @@ export default function Navigation() {
   <div className="md:hidden pb-4 border-t border-border">
     {navItems.map((item) => (
       <div key={item.href}>
-        <button
-          onClick={() => setOpenDropdown(openDropdown === item.href ? null : item.href)}
-          className="w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary/50 rounded-md flex items-center justify-between"
-        >
-          {/* Close menu when navigating */}
+        <div className="flex items-center justify-between px-4 py-2 hover:bg-secondary/50 rounded-md">
           <Link
             href={item.href}
-            onClick={() => setIsOpen(false)}
-            className="flex-1"
+            onClick={() => {
+              if (item.submenu) {
+                // Prevent direct navigation, just open dropdown first
+                setOpenDropdown(openDropdown === item.href ? null : item.href)
+              } else {
+                // Normal link
+                setIsOpen(false)
+              }
+            }}
+            className="text-sm font-medium text-foreground flex-1"
           >
             {item.label}
           </Link>
 
           {item.submenu && (
-            <ChevronDown
-              size={16}
-              className={`transform transition-transform ${openDropdown === item.href ? "rotate-180" : ""}`}
-            />
+            <button
+              onClick={() =>
+                setOpenDropdown(openDropdown === item.href ? null : item.href)
+              }
+              className="p-1"
+            >
+              <ChevronDown
+                size={16}
+                className={`transform transition-transform ${
+                  openDropdown === item.href ? "rotate-180" : ""
+                }`}
+              />
+            </button>
           )}
-        </button>
+        </div>
 
         {item.submenu && openDropdown === item.href && (
           <div className="bg-secondary/30 border-l-2 border-primary">
@@ -121,7 +134,7 @@ export default function Navigation() {
                 key={subitem.href}
                 href={subitem.href}
                 className="block px-8 py-2 text-sm text-foreground hover:text-primary"
-                onClick={() => setIsOpen(false)} // ✅ close menu when submenu clicked
+                onClick={() => setIsOpen(false)}
               >
                 {subitem.label}
               </Link>
