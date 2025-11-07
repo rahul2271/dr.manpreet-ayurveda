@@ -87,36 +87,21 @@ export default function Navigation() {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {/* Mobile Navigation */}
+{/* Mobile Navigation */}
 {isOpen && (
   <div className="md:hidden pb-4 border-t border-border">
     {navItems.map((item) => (
       <div key={item.href}>
         <div className="flex items-center justify-between px-4 py-2 hover:bg-secondary/50 rounded-md">
-          <Link
-            href={item.href}
-            onClick={() => {
-              if (item.submenu) {
-                // Prevent direct navigation, just open dropdown first
-                setOpenDropdown(openDropdown === item.href ? null : item.href)
-              } else {
-                // Normal link
-                setIsOpen(false)
-              }
-            }}
-            className="text-sm font-medium text-foreground flex-1"
-          >
-            {item.label}
-          </Link>
-
-          {item.submenu && (
+          {item.submenu ? (
+            // If has submenu, handle manually
             <button
               onClick={() =>
                 setOpenDropdown(openDropdown === item.href ? null : item.href)
               }
-              className="p-1"
+              className="flex-1 text-left text-sm font-medium text-foreground flex items-center justify-between w-full"
             >
+              {item.label}
               <ChevronDown
                 size={16}
                 className={`transform transition-transform ${
@@ -124,9 +109,19 @@ export default function Navigation() {
                 }`}
               />
             </button>
+          ) : (
+            // Normal links without submenu
+            <Link
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              className="flex-1 text-sm font-medium text-foreground"
+            >
+              {item.label}
+            </Link>
           )}
         </div>
 
+        {/* Submenu */}
         {item.submenu && openDropdown === item.href && (
           <div className="bg-secondary/30 border-l-2 border-primary">
             {item.submenu.map((subitem) => (
@@ -144,6 +139,7 @@ export default function Navigation() {
       </div>
     ))}
 
+    {/* Contact Button */}
     <div className="px-4 pt-2">
       <Button asChild className="w-full" size="sm">
         <Link href="/contact" onClick={() => setIsOpen(false)}>
